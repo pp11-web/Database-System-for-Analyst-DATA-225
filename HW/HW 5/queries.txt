@@ -1,0 +1,120 @@
+SELECT  *FROM  REAL_ESTATE LIMIT 10;
+
+SELECT AVG(price) AS average_price FROM REAL_ESTATE;
+
+SELECT MAX(price) AS max_price, MIN(price) AS min_price FROM REAL_ESTATE;
+
+SELECT market, COUNT(*) AS property_count FROM REAL_ESTATE GROUP BY market;
+
+SELECT market, COUNT(*) AS property_count FROM REAL_ESTATE GROUP BY market;
+
+SELECT * FROM REAL_ESTATE WHERE surface > 100;
+
+SELECT AVG(CASE WHEN remote_support = 'Yes' THEN 1 ELSE 0 END) * 100 AS remote_support_percentage FROM REAL_ESTATE;
+
+SELECT advertiser_type, COUNT(*) AS property_count FROM REAL_ESTATE GROUP BY advertiser_type;
+
+SELECT COUNT(*) AS for_sale_count FROM REAL_ESTATE WHERE is_for_sale = 'Yes';
+
+SELECT CORR(surface, price) AS correlation_coefficient
+FROM REAL_ESTATE;
+
+SELECT market,
+       COUNT(CASE WHEN lighting = 'Natural' THEN 1 END) AS natural_lighting_count,
+       COUNT(CASE WHEN lighting = 'Artificial' THEN 1 END) AS artificial_lighting_count
+FROM REAL_ESTATE
+GROUP BY market;
+
+DELETE FROM REAL_ESTATE
+WHERE price IS NULL;
+
+select * from REAL_ESTATE;
+
+SELECT
+    SUM(CASE WHEN remote_support = TRUE AND lighting = TRUE THEN 1 ELSE 0 END) AS remote_and_good_lighting,
+    COUNT(*) AS total_properties,
+    (remote_and_good_lighting / total_properties) * 100 AS percentage
+FROM real_estate;
+
+SELECT  no_of_rooms, price, price / no_of_rooms AS price_per_room
+FROM real_estate where no_of_rooms !=0;
+
+SELECT advertiser_type, COUNT(*) AS property_count
+FROM real_estate
+GROUP BY advertiser_type;
+
+SELECT SUM(price) AS total_price
+FROM real_estate
+ORDER BY total_price DESC
+LIMIT 1;
+
+SELECT MIN(price) AS min_price, MAX(price) AS max_price
+FROM real_estate;
+
+SELECT 
+    timestamp,
+    market,
+    advertiser_type,
+    no_of_rooms,
+    COUNT(*) as total_properties
+FROM 
+    real_estate
+GROUP BY 
+    CUBE(timestamp, market, advertiser_type, no_of_rooms);
+
+
+SELECT 
+    timestamp,
+    market,
+    advertiser_type,
+    no_of_rooms,
+    COUNT(*) as total_properties
+FROM 
+    real_estate
+GROUP BY 
+    ROLLUP(timestamp, market, advertiser_type, no_of_rooms);
+
+
+SELECT 
+    market,
+    advertiser_type,
+    AVG(price) as avg_price,
+    MAX(surface) as max_surface,
+    COUNT(*) as total_properties
+FROM 
+    real_estate
+GROUP BY 
+    CUBE(market, advertiser_type);
+
+
+SELECT 
+    market,
+    advertiser_type,
+    no_of_rooms,
+    COUNT(*) as total_properties
+FROM 
+    real_estate
+WHERE 
+    is_for_sale = true
+GROUP BY 
+    ROLLUP(market, advertiser_type, no_of_rooms);
+
+SELECT 
+    market,
+    advertiser_type,
+    AVG(CASE WHEN is_for_sale = true THEN price ELSE NULL END) as avg_price_for_sale,
+    AVG(CASE WHEN is_for_sale = false THEN price ELSE NULL END) as avg_price_for_rent,
+    COUNT(*) as total_properties
+FROM 
+    real_estate
+GROUP BY 
+    CUBE(market, advertiser_type);
+
+SELECT 
+    remote_support,
+    AVG(price) as avg_price,
+    COUNT(*) as total_properties
+FROM 
+    real_estate
+GROUP BY 
+    CUBE(remote_support);

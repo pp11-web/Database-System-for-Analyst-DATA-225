@@ -1,0 +1,48 @@
+CREATE DATABASE DEMO_DBHW;
+CREATE SCHEMA DEMO_DBHW5;
+
+CREATE OR REPLACE STORAGE integration aws_s3_integration
+type = external_stage
+storage_provider ='S3'
+enabled = true
+storage_aws_role_arn = 'arn:aws:iam::770342028587:role/demo_hwdb'
+storage_allowed_locations = ('s3://demo-hw5-database/');
+
+SHOW INTEGRATIONS;
+
+DESC integration aws_s3_integration;
+
+GRANT usage on integration aws_s3_integration to role accountadmin;
+
+create or replace file format deno_format
+type = 'CSV'
+field_delimiter = '|'
+skip_header = 1;
+
+create or replace stage demo_aws_stage
+storage_integration = aws_s3_integration
+file_format = deno_format
+url = 's3://demo-hw5-database/';
+
+List @demo_aws_stage;
+
+CREATE TABLE real_estate (
+    timestamp STRING,
+    price FLOAT,
+    market STRING,
+    surface FLOAT,
+    remote_support BOOLEAN,
+    lighting BOOLEAN,
+    advertiser_type STRING,
+    no_of_rooms INTEGER,
+    url STRING,
+    is_for_sale BOOLEAN,
+    posting_id STRING
+);
+
+
+SELECT market, AVG(price) AS average_price
+FROM HOMEWORK_5
+GROUP BY market;
+
+DROP TABLE IF EXISTS homework_5;
